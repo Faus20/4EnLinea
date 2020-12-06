@@ -17,10 +17,10 @@ public class cuatro_en_linea {
 		int modo_juego = elegir_modo_juego();
 		if (modo_juego == 1) {
 			System.out.println("Modo de juego: Unx vs Unx");
-			unx_vs_unx(tablero, ancho, largo);
+			jugar(tablero, ancho, largo, modo_juego);
 		} else {
 			System.out.println("Modo de juego: Unx vs CPU");
-			// unx_vs_cpu(tablero, ancho, largo);
+			jugar(tablero, ancho, largo, modo_juego);
 		}
 
 	}// fin main
@@ -47,8 +47,7 @@ public class cuatro_en_linea {
 
 		while (numero < 1 || numero > 2) {
 			try {
-				System.out
-						.println("Seleccione modo de juego: (1) Unx vs Unx - (2) Unx vs CPU");
+				System.out.println("Seleccione modo de juego: (1) Unx vs Unx - (2) Unx vs CPU");
 				numero = new Integer(entrada.readLine());
 			} catch (Exception error) {
 				System.out.println(error);
@@ -59,7 +58,7 @@ public class cuatro_en_linea {
 		return numero;
 	}// fin elegir modo juego
 
-	private static void unx_vs_unx(char[][] tablero, int ancho, int largo) {
+	private static void jugar(char[][] tablero, int ancho, int largo, int modo) {
 		boolean gano = false;
 		boolean columna_valida = false;
 		
@@ -69,9 +68,17 @@ public class cuatro_en_linea {
 				turno_usuarix(tablero,ancho,largo,1, columna_valida);
 				//gano = comprobar_si_gano (tablero, ancho, largo);
 				
-				System.out.println("Turno jugador/a 2: ");
-				turno_usuarix(tablero,ancho,largo,2, columna_valida);
-				//gano = comprobar_si_gano (tablero, ancho, largo);
+				if (gano == false && modo == 1) {
+					System.out.println("Turno jugador/a 2: ");
+					turno_usuarix(tablero,ancho,largo,2, columna_valida);
+					//gano = comprobar_si_gano (tablero, ancho, largo);
+				} 
+				
+				if (gano == false && modo == 2) {
+					System.out.println("Turno CPU: ");
+					turno_usuarix(tablero,ancho,largo,3, columna_valida);
+					//gano = comprobar_si_gano (tablero, ancho, largo);
+				}
 						
 			} catch (Exception error) {
 				System.out.println(error);
@@ -86,10 +93,10 @@ public class cuatro_en_linea {
 		int columna = CERO;
 		
 		while (columna_valida == false) {
-			columna = pedir_columna(ancho);
+			columna = pedir_columna(ancho, usuarix);
 			columna_valida = es_valida(tablero, ancho, largo, columna);
 		}
-		insertar_ficha(tablero, ancho, largo, columna, 1);
+		insertar_ficha(tablero, ancho, largo, columna, usuarix);
 	}//fin turno usuarix
 
 	private static void insertar_ficha(char[][] tablero, int ancho, int largo, int columna, int juega) {
@@ -114,14 +121,19 @@ public class cuatro_en_linea {
 		return false;
 	}// fin es valida
 
-	private static int pedir_columna(int ancho) {
+	private static int pedir_columna(int ancho, int usuarix) {
 		BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
 		int columna = CERO;
 
 		while (columna < CERO || columna > ancho) {
 			try {
-				System.out.println("Eliga N° de columna: ");
-				columna = new Integer(entrada.readLine());
+				if (usuarix == 1 || usuarix == 2) {
+					System.out.println("Eliga N° de columna: ");
+					columna = new Integer(entrada.readLine());
+				}
+				if (usuarix == 3) {
+					columna = (int)(Math.random() * ancho + 1);
+				}
 			} catch (Exception error) {
 				System.out.println(error);
 			}
