@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 public class cuatro_en_linea {
 	private static final int MINIMO = 3;
 	private static final int CERO = 0;
-	private static final int MAXIMO = 4;
 
 	public static void main(String[] args) {
 
@@ -24,7 +23,6 @@ public class cuatro_en_linea {
 			System.out.println("Modo de juego: Unx vs CPU");
 			jugar(tablero, ancho, largo, modo_juego);
 		}
-
 	}// fin main
 
 	private static void cargarMatriz(char[][] matriz, int ancho, int largo) {
@@ -34,8 +32,7 @@ public class cuatro_en_linea {
 				matriz[fila][columna] = ' ';
 			}
 		}
-
-	}// FIN IMPRIMIR MATRIZ
+	}// fin cargar matriz
 
 	private static int pedir_numero() {
 		BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
@@ -78,50 +75,47 @@ public class cuatro_en_linea {
 			try {
 				System.out.println("Turno jugador/a 1: ");
 				gano_o_empato = turno_usuarix(tablero, ancho, largo, 1,columna_valida);
-				
+
+				if (gano_o_empato) {
+					System.out.println("Gana jugador/a 1");
+				}
+
+				if (!gano_o_empato && modo == 1) {
+
+					System.out.println("Turno jugador/a 2: ");
+					gano_o_empato = turno_usuarix(tablero, ancho, largo, 2,columna_valida);
+
+					if (gano_o_empato) {
+						System.out.println("Gana jugador/a 2");
+					}
+				}
+
+				if (!gano_o_empato && modo == 2) {
+
+					System.out.println("Turno CPU: ");
+					gano_o_empato = turno_usuarix(tablero, ancho, largo, 3, columna_valida);
+
+					if (gano_o_empato) {
+						System.out.println("Gana CPU");
+					}
+
+				}
+				if (!gano_o_empato) {
+					if (empate(tablero, largo, ancho)) {
+						System.out.println("Empate");
+						gano_o_empato = true;
+					}
+				}
+
 			} catch (Exception error) {
 				System.out.println(error);
 				gano_o_empato = false;
 			}
 
-			if (gano_o_empato) {
-				System.out.println("Gana jugador/a 1");
-			}
-
-			if (!gano_o_empato && modo == 1) {
-				try {
-					System.out.println("Turno jugador/a 2: ");
-					gano_o_empato = turno_usuarix(tablero, ancho, largo, 2,columna_valida);
-
-				} catch (Exception error) {
-					System.out.println(error);
-					gano_o_empato = false;
-				}
-				if (gano_o_empato) {
-					System.out.println("Gana jugador/a 2");
-				}
-			}
-
-			if (!gano_o_empato && modo == 2) {
-
-				try {
-					System.out.println("Turno CPU: ");
-					gano_o_empato = turno_usuarix(tablero, ancho, largo, 3, columna_valida);
-
-				} catch (Exception error) {
-					System.out.println(error);
-					gano_o_empato = false;
-				}
-				if (gano_o_empato) {
-					System.out.println("Gana CPU");
-				}
-			}
-
 		}
-
 	}// fin unx vs unx
 
-	private static boolean turno_usuarix(char[][] tablero, int ancho, int largo, int usuarix, boolean columna_valida) {
+	private static boolean turno_usuarix(char[][] tablero, int ancho,int largo, int usuarix, boolean columna_valida) {
 
 		boolean gano_o_empato = false;
 		int columna = CERO;
@@ -132,7 +126,6 @@ public class cuatro_en_linea {
 		}
 		gano_o_empato = insertar_ficha(tablero, ancho, largo, columna, usuarix);
 		return gano_o_empato;
-		
 	}// fin turno usuarix
 
 	private static int pedir_columna(int ancho, int usuarix) {
@@ -155,8 +148,7 @@ public class cuatro_en_linea {
 		return columna;
 	}// fin pedir columna
 
-	private static boolean es_valida(char[][] tablero, int ancho, int largo,
-			int columna) {
+	private static boolean es_valida(char[][] tablero, int ancho, int largo,int columna) {
 		if (tablero[0][columna] == ' ') {
 			return true;
 		}
@@ -199,13 +191,23 @@ public class cuatro_en_linea {
 		if (buscar_descendente(tablero, largo, ancho, aux, fila_ficha, col)) {
 			return true;
 		}
-
 		return false;
 	}// fin gano o empato
 
+	private static boolean empate(char[][] tablero, int largo, int ancho) {
+
+		for (int fila = 0; fila < largo; fila++) {
+			for (int columna = 0; columna < ancho; columna++) {
+				if (tablero[fila][columna] == ' ') {
+					return false;
+				}
+			}
+		}
+		return true;
+	}// fin empate
+
 	private static boolean buscar_descendente(char[][] tablero, int largo,int ancho, char aux, int fila_ficha, int col) {
 		int contador = 0;
-
 		int auxfila = fila_ficha;
 		int auxcol = col;
 
@@ -235,7 +237,6 @@ public class cuatro_en_linea {
 
 	private static boolean buscar_ascendente(char[][] tablero, int largo,int ancho, char aux, int fila_ficha, int col) {
 		int contador = 0;
-
 		int auxfila = fila_ficha;
 		int auxcol = col;
 
@@ -279,7 +280,7 @@ public class cuatro_en_linea {
 		return false;
 	}// fin buscar vertical
 
-	private static boolean buscar_horizontal(char[][] tablero, int ancho, char aux, int fila_ficha, int col) {
+	private static boolean buscar_horizontal(char[][] tablero, int ancho,char aux, int fila_ficha, int col) {
 		int contador = 0;
 
 		for (int columna = 0; columna < ancho; columna++) {
@@ -305,6 +306,5 @@ public class cuatro_en_linea {
 			}
 			System.out.println();
 		}
-
-	}// FIN IMPRIMIR MATRIZ
+	}// fin imprimir matriz
 }
